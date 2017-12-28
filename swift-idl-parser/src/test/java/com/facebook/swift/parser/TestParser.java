@@ -44,6 +44,7 @@ public class TestParser
     public void testParse(Path path)
             throws Exception
     {
+    	System.err.println(path.toString());
         parseThriftIdl(pathReader(path));
     }
 

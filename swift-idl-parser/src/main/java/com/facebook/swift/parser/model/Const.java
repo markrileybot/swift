@@ -17,6 +17,8 @@ package com.facebook.swift.parser.model;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Const
@@ -26,9 +28,15 @@ public class Const
     private final ThriftType type;
     private final ConstValue value;
 
-    public Const(String name, ThriftType type, ConstValue value)
+	public Const(String name, ThriftType type, ConstValue value)
+	{
+		this(name, type, value, null);
+	}
+
+    public Const(String name, ThriftType type, ConstValue value, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.type = checkNotNull(type, "type");
         this.value = checkNotNull(value, "value");
     }
@@ -56,6 +64,7 @@ public class Const
                           .add("name", name)
                           .add("type", type)
                           .add("value", value)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

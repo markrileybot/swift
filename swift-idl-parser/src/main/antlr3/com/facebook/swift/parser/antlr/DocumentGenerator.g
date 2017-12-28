@@ -108,7 +108,7 @@ senum returns [StringEnum value]
     ;
 
 struct returns [Struct value]
-    : ^(STRUCT k=IDENTIFIER f=fields t=type_annotations) { $value = new Struct($k.text, $f.value, $t.value); }
+    : ^(STRUCT k=IDENTIFIER f=fields t=type_annotations c=doccomments) { $value = new Struct($k.text, $f.value, $t.value, $c.value); }
     ;
 
 union returns [Union value]
@@ -157,15 +157,19 @@ enum_field[IntegerEnumFieldList fieldList] returns [IntegerEnumField value]
     }
     ;
 
-senum_values returns [List<String> value = new ArrayList<>()]
+senum_values returns [List<String> value = new ArrayList<>(1)]
     : ( v=LITERAL { $value.add($v.text); } )*
     ;
 
-fields returns [List<ThriftField> value = new ArrayList<>()]
+fields returns [List<ThriftField> value = new ArrayList<>(1)]
     : ( field { $value.add($field.value); } )*
     ;
 
-functions returns [List<ThriftMethod> value = new ArrayList<>()]
+doccomments returns [List<String> value = new ArrayList<>(1)]
+    : ( v=DOCCOMMENT { $value.add($v.text); } )*
+    ;
+
+functions returns [List<ThriftMethod> value = new ArrayList<>(1)]
     : (function { $value.add($function.value); } )*
     ;
 

@@ -25,16 +25,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Collections.emptyList;
+import static com.google.common.base.Preconditions.*;
+import static java.util.Collections.*;
 
-public class Document
+public class Document extends BaseElement
 {
     private final Header header;
     private final List<Definition> definitions;
 
-    public Document(Header header, List<Definition> definitions)
+	public Document(Header header, List<Definition> definitions)
+	{
+		this(header, definitions, null);
+	}
+
+	public Document(Header header, List<Definition> definitions, List<String> comment)
     {
+    	super(comment);
         this.header = checkNotNull(header, "header");
         this.definitions = ImmutableList.copyOf(checkNotNull(definitions, "definitions"));
     }
@@ -49,7 +55,7 @@ public class Document
         return definitions;
     }
 
-    public void visit(final DocumentVisitor visitor) throws IOException
+	public void visit(final DocumentVisitor visitor) throws IOException
     {
         Preconditions.checkNotNull(visitor, "the visitor must not be null!");
 
@@ -67,6 +73,7 @@ public class Document
         return MoreObjects.toStringHelper(this)
                           .add("header", header)
                           .add("definitions", definitions)
+		                  .add("docs", getDocs())
                           .toString();
     }
 
@@ -78,6 +85,6 @@ public class Document
         Map<String, String> namespaces = Collections.emptyMap();
         Header header = new Header(includes, cppIncludes, defaultNamespace, namespaces);
         List<Definition> definitions = emptyList();
-        return new Document(header, definitions);
+        return new Document(header, definitions, null);
     }
 }

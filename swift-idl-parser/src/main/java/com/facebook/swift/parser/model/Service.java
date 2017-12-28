@@ -32,12 +32,20 @@ public class Service
     private final String name;
     private final Optional<String> parent;
     private final List<ThriftMethod> methods;
+	private final List<TypeAnnotation> annotations;
 
-    public Service(String name, String parent, List<ThriftMethod> methods, List<TypeAnnotation> annotations)
+	public Service(String name, String parent, List<ThriftMethod> methods, List<TypeAnnotation> annotations)
+	{
+		this(name, parent, methods, annotations, null);
+	}
+
+	public Service(String name, String parent, List<ThriftMethod> methods, List<TypeAnnotation> annotations, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.parent = Optional.fromNullable(parent);
         this.methods = ImmutableList.copyOf(checkNotNull(methods, "methods"));
+        this.annotations = ImmutableList.copyOf(checkNotNull(annotations, "annotations"));
     }
 
     @Override
@@ -71,6 +79,7 @@ public class Service
                           .add("name", name)
                           .add("parent", parent)
                           .add("methods", methods)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

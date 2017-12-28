@@ -23,8 +23,13 @@ import java.util.List;
 public class ThriftException
         extends AbstractStruct
 {
-    public ThriftException(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+	public ThriftException(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+	{
+		super(name, fields, annotations);
+	}
+
+    public ThriftException(String name, List<ThriftField> fields, List<TypeAnnotation> annotations, List<String> comment)
     {
-        super(name, fields, annotations);
+        super(name, fields, annotations, comment);
     }
 }

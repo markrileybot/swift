@@ -18,6 +18,8 @@ package com.facebook.swift.parser.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Typedef
@@ -26,9 +28,15 @@ public class Typedef
     private final String name;
     private final ThriftType type;
 
-    public Typedef(String name, ThriftType type)
+	public Typedef(String name, ThriftType type)
+	{
+		this(name, type, null);
+	}
+
+    public Typedef(String name, ThriftType type, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.type = Preconditions.checkNotNull(type, "type");
     }
 
@@ -49,6 +57,7 @@ public class Typedef
         return MoreObjects.toStringHelper(this)
                           .add("name", name)
                           .add("type", type)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

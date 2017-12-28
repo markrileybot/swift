@@ -28,9 +28,15 @@ public class StringEnum
     private final String name;
     private final List<String> values;
 
-    public StringEnum(String name, List<String> values)
+	public StringEnum(String name, List<String> values)
+	{
+		this(name, values, null);
+	}
+
+    public StringEnum(String name, List<String> values, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.values = ImmutableList.copyOf(checkNotNull(values, "values"));
     }
 
@@ -51,6 +57,7 @@ public class StringEnum
         return MoreObjects.toStringHelper(this)
                           .add("name", name)
                           .add("values", values)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

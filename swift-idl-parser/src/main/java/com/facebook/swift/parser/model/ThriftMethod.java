@@ -25,7 +25,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ThriftMethod implements Visitable
+public class ThriftMethod extends BaseElement implements Visitable
 {
     private final String name;
     private final ThriftType returnType;
@@ -34,14 +34,27 @@ public class ThriftMethod implements Visitable
     private final List<ThriftField> throwsFields;
     private final List<TypeAnnotation> annotations;
 
-    public ThriftMethod(
+	public ThriftMethod(
+			String name,
+			ThriftType returnType,
+			List<ThriftField> arguments,
+			boolean oneway,
+			List<ThriftField> throwsFields,
+			List<TypeAnnotation> annotations)
+	{
+		this(name, returnType, arguments, oneway, throwsFields, annotations, null);
+	}
+
+	public ThriftMethod(
             String name,
             ThriftType returnType,
             List<ThriftField> arguments,
             boolean oneway,
             List<ThriftField> throwsFields,
-            List<TypeAnnotation> annotations)
+            List<TypeAnnotation> annotations,
+            List<String> comment)
     {
+    	super(comment);
         this.name = checkNotNull(name, "name");
         this.returnType = checkNotNull(returnType, "returnType");
         this.arguments = ImmutableList.copyOf(checkNotNull(arguments, "arguments"));
@@ -81,7 +94,7 @@ public class ThriftMethod implements Visitable
         return annotations;
     }
 
-    @Override
+	@Override
     public void visit(final DocumentVisitor visitor) throws IOException
     {
         Visitable.Utils.visit(visitor, this);
@@ -97,6 +110,7 @@ public class ThriftMethod implements Visitable
                 .add("oneway", oneway)
                 .add("throwsFields", throwsFields)
                 .add("annotations", annotations)
+		        .add("docs", getDocs())
                 .toString();
     }
 }

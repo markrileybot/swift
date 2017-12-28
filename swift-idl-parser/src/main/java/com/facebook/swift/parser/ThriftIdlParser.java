@@ -55,7 +55,7 @@ public class ThriftIdlParser
             try {
                 Tree tree = (Tree) parser.document().getTree();
                 if (parser.getNumberOfSyntaxErrors() > 0) {
-                    throw new IllegalArgumentException("syntax error");
+                    throw new IllegalArgumentException(parser.getNumberOfSyntaxErrors() + " syntax error(s)");
                 }
                 return tree;
             }

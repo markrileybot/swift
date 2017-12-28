@@ -20,16 +20,21 @@ import com.facebook.swift.parser.visitor.Nameable;
 import com.facebook.swift.parser.visitor.Visitable;
 
 import java.io.IOException;
+import java.util.List;
 
-public abstract class Definition implements Visitable, Nameable
+public abstract class Definition extends BaseElement implements Visitable, Nameable
 {
-    @Override
+	protected Definition(List<String> docs) {
+		super(docs);
+	}
+
+	@Override
     public void visit(final DocumentVisitor visitor) throws IOException
     {
         Visitable.Utils.visit(visitor, this);
     }
 
-    @Override
+	@Override
     public abstract String getName();
 
     @Override

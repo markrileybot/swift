@@ -28,9 +28,15 @@ public class IntegerEnum
     private final String name;
     private final List<IntegerEnumField> fields;
 
-    public IntegerEnum(String name, List<IntegerEnumField> fields)
+	public IntegerEnum(String name, List<IntegerEnumField> fields)
+	{
+		this(name, fields, null);
+	}
+
+    public IntegerEnum(String name, List<IntegerEnumField> fields, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.fields = ImmutableList.copyOf(checkNotNull(fields, "fields"));
     }
 
@@ -51,6 +57,7 @@ public class IntegerEnum
         return MoreObjects.toStringHelper(this)
                           .add("name", name)
                           .add("fields", fields)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

@@ -64,7 +64,7 @@ tokens {
 
 
 document
-    : header* definition* EOF -> ^(DOCUMENT header* definition*)
+    : DOCCOMMENT* header* definition* DOCCOMMENT* EOF -> ^(DOCUMENT header* definition*)
     ;
 
 
@@ -73,14 +73,14 @@ header
     ;
 
 include
-    : 'include' LITERAL -> ^(INCLUDE LITERAL)
+    : DOCCOMMENT* 'include' LITERAL -> ^(INCLUDE LITERAL)
     ;
 
 namespace
-    : 'namespace' '*' (v=IDENTIFIER | v=LITERAL) -> ^(DEFAULT_NAMESPACE $v)
-    | 'namespace' k=IDENTIFIER (v=IDENTIFIER | v=LITERAL) -> ^(NAMESPACE $k $v)
-    | 'cpp_namespace' IDENTIFIER -> ^(NAMESPACE IDENTIFIER["cpp"] IDENTIFIER)
-    | 'php_namespace' IDENTIFIER -> ^(NAMESPACE IDENTIFIER["php"] IDENTIFIER)
+    : DOCCOMMENT* 'namespace' '*' (v=IDENTIFIER | v=LITERAL) -> ^(DEFAULT_NAMESPACE $v)
+    | DOCCOMMENT* 'namespace' k=IDENTIFIER (v=IDENTIFIER | v=LITERAL) -> ^(NAMESPACE $k $v)
+    | DOCCOMMENT* 'cpp_namespace' IDENTIFIER -> ^(NAMESPACE IDENTIFIER["cpp"] IDENTIFIER)
+    | DOCCOMMENT* 'php_namespace' IDENTIFIER -> ^(NAMESPACE IDENTIFIER["php"] IDENTIFIER)
     ;
 
 cpp_include
@@ -93,45 +93,45 @@ definition
     ;
 
 const_rule
-    : 'const' field_type IDENTIFIER '=' const_value list_separator?
+    : DOCCOMMENT* 'const' field_type IDENTIFIER '=' const_value list_separator?
         -> ^(CONST IDENTIFIER field_type const_value)
     ;
 
 typedef
-    : 'typedef' field_type IDENTIFIER type_annotations? -> ^(TYPEDEF IDENTIFIER field_type)
+    : DOCCOMMENT* 'typedef' field_type IDENTIFIER type_annotations? -> ^(TYPEDEF IDENTIFIER field_type)
     ;
 
 enum_rule
-    : 'enum' IDENTIFIER '{' enum_field* '}' type_annotations? -> ^(ENUM IDENTIFIER enum_field*)
+    : DOCCOMMENT* 'enum' IDENTIFIER '{' enum_field* '}' type_annotations? -> ^(ENUM IDENTIFIER enum_field*)
     ;
 
 enum_field
-    : IDENTIFIER ('=' integer)? type_annotations? list_separator? -> ^(IDENTIFIER integer?)
+    : DOCCOMMENT* IDENTIFIER ('=' integer)? type_annotations? list_separator? -> ^(IDENTIFIER integer?)
     ;
 
 senum
-    : 'senum' IDENTIFIER '{' (LITERAL list_separator?)* '}' type_annotations? -> ^(SENUM IDENTIFIER LITERAL*)
+    : DOCCOMMENT* 'senum' IDENTIFIER '{' (LITERAL list_separator?)* '}' type_annotations? -> ^(SENUM IDENTIFIER LITERAL*)
     ;
 
 struct
-    : 'struct' IDENTIFIER '{' field* '}' type_annotations? -> ^(STRUCT IDENTIFIER field* type_annotations?)
+    : DOCCOMMENT* 'struct' IDENTIFIER '{' field* '}' type_annotations? -> ^(STRUCT IDENTIFIER field* type_annotations? DOCCOMMENT*)
     ;
 
 union
-    : 'union' IDENTIFIER '{' field* '}' type_annotations? -> ^(UNION IDENTIFIER field* type_annotations?)
+    : DOCCOMMENT* 'union' IDENTIFIER '{' field* '}' type_annotations? -> ^(UNION IDENTIFIER field* type_annotations?)
     ;
 
 exception
-    : 'exception' IDENTIFIER '{' field* '}' type_annotations? -> ^(EXCEPTION IDENTIFIER field* type_annotations?)
+    : DOCCOMMENT* 'exception' IDENTIFIER '{' field* '}' type_annotations? -> ^(EXCEPTION IDENTIFIER field* type_annotations?)
     ;
 
 service
-    : 'service' s=IDENTIFIER ('extends' e=IDENTIFIER)? '{' f=function* '}' type_annotations? -> ^(SERVICE $s ^(EXTENDS $e?) function* type_annotations?)
+    : DOCCOMMENT* 'service' s=IDENTIFIER ('extends' e=IDENTIFIER)? '{' f=function* '}' type_annotations? -> ^(SERVICE $s ^(EXTENDS $e?) function* type_annotations?)
     ;
 
 
 field
-    : field_id? field_req? field_type IDENTIFIER ('=' const_value)? type_annotations? list_separator?
+    : DOCCOMMENT* field_id? field_req? field_type IDENTIFIER ('=' const_value)? type_annotations? list_separator?
         -> ^(FIELD IDENTIFIER field_type field_id? ^(REQUIREDNESS field_req?) const_value? type_annotations?)
     ;
 
@@ -146,7 +146,7 @@ field_req
 
 
 function
-    : oneway? function_type IDENTIFIER '(' field* ')' throws_list? type_annotations? list_separator?
+    : DOCCOMMENT* oneway? function_type IDENTIFIER '(' field* ')' throws_list? type_annotations? list_separator?
         -> ^(METHOD IDENTIFIER function_type ^(ARGS field*) oneway? throws_list? type_annotations?)
     ;
 
@@ -284,7 +284,10 @@ WS
     : (' ' | '\t' | '\r' '\n' | '\n')+ { $channel = HIDDEN; }
     ;
 
+DOCCOMMENT
+    : '/*' (options {greedy=false;} : .)* '*/'
+    ;
+
 COMMENT
-    : '/*' (options {greedy=false;} : .)* '*/' { $channel = HIDDEN; }
-    | ('//' | '#') (~'\n')* { $channel = HIDDEN; }
+    : ('//' | '#') (~'\n')* { $channel = HIDDEN; }
     ;

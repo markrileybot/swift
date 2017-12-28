@@ -28,13 +28,13 @@ struct OldSchool {
 }
 
 struct Simple {
-  1: /* :) */ i16 im_default;
+  1: i16 im_default;
   2: required i16 im_required;
   3: optional i16 im_optional;
 }
 
 struct Tricky1 {
-  1: /* :) */ i16 im_default;
+  1: i16 im_default;
 }
 
 struct Tricky2 {

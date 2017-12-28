@@ -15,6 +15,7 @@
  */
 package com.facebook.swift.parser;
 
+import com.facebook.swift.parser.model.Document;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
@@ -48,7 +49,7 @@ public class TestDocument
     {
         // TODO: verify document
         System.out.println(treeToString(parseTree(resourceReader("Hbase.thrift"))));
-        System.out.println(parseThriftIdl(resourceReader("Hbase.thrift")));
+	    System.out.println(parseThriftIdl(resourceReader("Hbase.thrift")));
     }
 
     private static CharSource resourceReader(String name)

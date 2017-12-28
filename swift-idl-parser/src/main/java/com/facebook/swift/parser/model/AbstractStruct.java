@@ -32,9 +32,16 @@ public abstract class AbstractStruct
     private final List<ThriftField> fields;
     private final List<TypeAnnotation> annotations;
 
-    public AbstractStruct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+
+	public AbstractStruct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+	{
+		this(name, fields, annotations, null);
+	}
+
+    public AbstractStruct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations, List<String> comment)
     {
-        this.name = checkNotNull(name, "name");
+	    super(comment);
+	    this.name = checkNotNull(name, "name");
         this.fields = ImmutableList.copyOf(checkNotNull(fields, "fields"));
         this.annotations = ImmutableList.copyOf(checkNotNull(annotations, "annotations"));
     }
@@ -71,6 +78,7 @@ public abstract class AbstractStruct
                           .add("name", name)
                           .add("fields", fields)
                           .add("annotations", annotations)
+		                  .add("docs", getDocs())
                           .toString();
     }
 }

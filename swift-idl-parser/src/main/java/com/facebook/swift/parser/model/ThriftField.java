@@ -27,9 +27,10 @@ import java.util.List;
 import static com.facebook.swift.codec.ThriftField.RECURSIVE_REFERENCE_ANNOTATION_NAME;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ThriftField implements Visitable
+public class ThriftField extends BaseElement implements Visitable
 {
-    public enum Requiredness
+
+	public enum Requiredness
     {
         REQUIRED, OPTIONAL, NONE
     }
@@ -42,14 +43,27 @@ public class ThriftField implements Visitable
     private final List<TypeAnnotation> annotations;
     private final boolean isRecursiveReference;
 
+	public ThriftField(
+			String name,
+			ThriftType type,
+			Long identifier,
+			Requiredness requiredness,
+			ConstValue value,
+			List<TypeAnnotation> annotations)
+	{
+		this(name, type, identifier, requiredness, value, annotations, null);
+	}
+
     public ThriftField(
             String name,
             ThriftType type,
             Long identifier,
             Requiredness requiredness,
             ConstValue value,
-            List<TypeAnnotation> annotations)
+            List<TypeAnnotation> annotations,
+            List<String> comment)
     {
+    	super(comment);
         this.name = checkNotNull(name, "name");
         this.type = checkNotNull(type, "type");
         this.identifier = Optional.fromNullable(identifier);
@@ -100,7 +114,7 @@ public class ThriftField implements Visitable
         return annotations;
     }
 
-    @Override
+	@Override
     public String toString()
     {
         return MoreObjects.toStringHelper(this)
@@ -110,6 +124,7 @@ public class ThriftField implements Visitable
                           .add("requiredness", requiredness)
                           .add("value", value)
                           .add("annotations", annotations)
+		                  .add("docs", getDocs())
                           .toString();
     }
 

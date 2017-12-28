@@ -20,8 +20,14 @@ import java.util.List;
 public class Struct
         extends AbstractStruct
 {
-    public Struct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+
+	public Struct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations)
+	{
+		super(name, fields, annotations);
+	}
+
+    public Struct(String name, List<ThriftField> fields, List<TypeAnnotation> annotations, List<String> comment)
     {
-        super(name, fields, annotations);
+        super(name, fields, annotations, comment);
     }
 }
