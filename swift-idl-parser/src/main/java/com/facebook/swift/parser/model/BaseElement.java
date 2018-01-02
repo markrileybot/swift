@@ -45,26 +45,4 @@ public class BaseElement {
 		}
 		return sb.toString().trim();
 	}
-
-	private static String getCleanLine(String doc, int start, int end) {
-		String line = doc.substring(start, end).trim();
-		if (line.length() > 2) {
-			if (line.startsWith("/*")) {
-				line = line.substring(2);
-			}
-			if (line.startsWith("*")) {
-				line = line.substring(1);
-			}
-			if (line.endsWith("*/")) {
-				if (line.length() > 2) {
-					line = line.substring(0, line.length() - 2);
-				} else {
-					line = "";
-				}
-			}
-		} else {
-			line = "";
-		}
-		return line;
-	}
 }

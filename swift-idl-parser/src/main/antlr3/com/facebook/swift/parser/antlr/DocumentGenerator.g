@@ -37,8 +37,8 @@ options {
 
 
 document returns [Document value]
-    : DOCUMENT                       { $value = Document.emptyDocument(); }
-    | ^(DOCUMENT header definitions) { $value = new Document($header.value, $definitions.value); }
+    : DOCUMENT                       			   { $value = Document.emptyDocument(); }
+    | ^(DOCUMENT header definitions c=doccomments) { $value = new Document($header.value, $definitions.value, $c.value); }
     ;
 
 
@@ -92,19 +92,19 @@ definition returns [Definition value]
     ;
 
 const_rule returns [Const value]
-    : ^(CONST k=IDENTIFIER t=field_type v=const_value) { $value = new Const($k.text, $t.value, $v.value); }
+    : ^(CONST k=IDENTIFIER t=field_type v=const_value c=doccomments) { $value = new Const($k.text, $t.value, $v.value, $c.value); }
     ;
 
 typedef returns [Typedef value]
-    : ^(TYPEDEF k=IDENTIFIER t=field_type) { $value = new Typedef($k.text, $t.value); }
+    : ^(TYPEDEF k=IDENTIFIER t=field_type c=doccomments) { $value = new Typedef($k.text, $t.value, $c.value); }
     ;
 
 enum_rule returns [IntegerEnum value]
-    : ^(ENUM k=IDENTIFIER v=enum_fields) { $value = new IntegerEnum($k.text, $v.value); }
+    : ^(ENUM k=IDENTIFIER v=enum_fields c=doccomments) { $value = new IntegerEnum($k.text, $v.value, $c.value); }
     ;
 
 senum returns [StringEnum value]
-    : ^(SENUM k=IDENTIFIER v=senum_values) { $value = new StringEnum($k.text, $v.value); }
+    : ^(SENUM k=IDENTIFIER v=senum_values c=doccomments) { $value = new StringEnum($k.text, $v.value, $c.value); }
     ;
 
 struct returns [Struct value]
@@ -112,15 +112,15 @@ struct returns [Struct value]
     ;
 
 union returns [Union value]
-    : ^(UNION k=IDENTIFIER f=fields t=type_annotations) { $value = new Union($k.text, $f.value, $t.value); }
+    : ^(UNION k=IDENTIFIER f=fields t=type_annotations c=doccomments) { $value = new Union($k.text, $f.value, $t.value, $c.value); }
     ;
 
 exception returns [ThriftException value]
-    : ^(EXCEPTION k=IDENTIFIER f=fields t=type_annotations) { $value = new ThriftException($k.text, $f.value, $t.value); }
+    : ^(EXCEPTION k=IDENTIFIER f=fields t=type_annotations c=doccomments) { $value = new ThriftException($k.text, $f.value, $t.value, $c.value); }
     ;
 
 service returns [Service value]
-    : ^(SERVICE k=IDENTIFIER ^(EXTENDS e=IDENTIFIER?) f=functions t=type_annotations) { $value = new Service($k.text, $e.text, $f.value, $t.value); }
+    : ^(SERVICE k=IDENTIFIER ^(EXTENDS e=IDENTIFIER?) f=functions t=type_annotations c=doccomments) { $value = new Service($k.text, $e.text, $f.value, $t.value, $c.value); }
     ;
 
 
@@ -175,8 +175,8 @@ functions returns [List<ThriftMethod> value = new ArrayList<>(1)]
 
 
 field returns [ThriftField value]
-    : ^(FIELD k=IDENTIFIER t=field_type i=integer? r=field_req c=const_value? a=type_annotations)
-        { $value = new ThriftField($k.text, $t.value, $i.value, $r.value, $c.value, $a.value); }
+    : ^(FIELD k=IDENTIFIER t=field_type i=integer? r=field_req c=const_value? a=type_annotations q=doccomments)
+        { $value = new ThriftField($k.text, $t.value, $i.value, $r.value, $c.value, $a.value, $q.value); }
     ;
 
 field_req returns [ThriftField.Requiredness value]
@@ -187,8 +187,8 @@ field_req returns [ThriftField.Requiredness value]
 
 
 function returns [ThriftMethod value]
-    : ^(METHOD k=IDENTIFIER t=function_type f=args o=oneway r=throws_list a=type_annotations)
-        { $value = new ThriftMethod($k.text, $t.value, $f.value, $o.value, $r.value, $a.value); }
+    : ^(METHOD k=IDENTIFIER t=function_type f=args o=oneway r=throws_list a=type_annotations c=doccomments)
+        { $value = new ThriftMethod($k.text, $t.value, $f.value, $o.value, $r.value, $a.value, $c.value); }
     ;
 
 args returns [List<ThriftField> value = new ArrayList<>()]
