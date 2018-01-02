@@ -17,7 +17,6 @@ package com.facebook.swift.parser.model;
 
 import com.google.common.collect.ImmutableList;
 
-import java.text.BreakIterator;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,17 +35,13 @@ public class BaseElement {
 	public String getDocsJoined() {
 		StringBuilder sb = new StringBuilder();
 		for (String doc : docs) {
-			BreakIterator bi = BreakIterator.getLineInstance();
-			bi.setText(doc);
-			for (int start = bi.first(), end = bi.next();
-			     end != BreakIterator.DONE;
-			     start = end, end = bi.next()) {
-
-				String line = getCleanLine(doc, start, end);
-				if (!line.isEmpty()) {
-					sb.append(line).append(' ');
-				}
-			}
+			doc = doc.replaceAll("/\\*", "")
+					.replaceAll("\\*/", " ")
+					.replaceAll(" \\* ", "")
+					.replace('*', ' ')
+					.replace('\n', ' ')
+					.trim();
+			sb.append(doc).append(' ');
 		}
 		return sb.toString().trim();
 	}
