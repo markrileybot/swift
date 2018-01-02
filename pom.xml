@@ -39,17 +39,21 @@
   </organization>
 
   <scm>
-    <connection>scm:git:git://github.com/facebook/swift.git</connection>
-    <developerConnection>scm:git:git@github.com:facebook/swift.git</developerConnection>
-    <url>https://github.com/facebook/swift</url>
+    <connection>scm:git:git://github.com/markrileybot/swift.git</connection>
+    <developerConnection>scm:git:git@github.com:markrileybot/swift.git</developerConnection>
+    <url>https://github.com/markrileybot/swift</url>
     <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
-    <site>
-      <id>github-project-site</id>
-      <url>gitsite:git@github.com/facebook/swift.git</url>
-    </site>
+        <repository>
+            <id>nexus.dtect.net</id>
+			<url>https://nexus.dtect.net/content/repositories/thirdparty</url>
+        </repository>
+		<snapshotRepository>
+			<id>nexus.dtect.net</id>
+			<url>https://nexus.dtect.net/content/repositories/thirdparty-snapshot</url>
+        </snapshotRepository>
   </distributionManagement>
 
   <modules>
